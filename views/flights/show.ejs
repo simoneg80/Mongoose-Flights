@@ -1,0 +1,85 @@
+<%- include('../partials/header') %>
+
+<section id="show-page">
+  <div>Airline:</div>
+  <div><%= flight.airline %></div>
+  <div>Airport:</div>
+  <div><%= flight.airport %></div>
+  <div>Flight No:</div>
+  <div><%= flight.flightNo %></div>
+  <div>Departs:</div>
+  <div><%= flight.departs.toDateString() %></div>
+  <div><%= flight.departs.toLocaleTimeString('en-US')%></div>
+</section>
+
+<form class="arrival" action="/flights/<%= flight._id %>" method="POST">
+    <label>Arrival:</label>
+    <select name="arrival-airport">
+      <option value="AUS">Austin</option>
+      <option value="DFW">Dallas</option>
+      <option value="DEN">Denver</option>
+      <option value="LAX">Los Angeles</option>
+      <option value="SAN">San Diego</option>
+      <option value="SFO">San Francisco</option>
+    </select>
+    <label>Arrival Time:</label>
+    <input type="datetime-local" name="arrival" />
+    <input type="submit" value="Add Destination" />
+  </form>
+  <table>
+    <thead>
+      <tr>
+        <th>Airport</th>
+        <th>Arrival Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% flight.destinations.forEach(function(d) { %>
+      <tr>
+        <td><%= d.airport %></td>
+        <td><%= d.arrival?.toDateString() %> <br>
+            <%= d.arrival?.toLocaleTimeString('en-US')%></td>
+        <td>
+          <form
+            action="/flights/<%= flight._id %>/destinations/<%= d._id %>?_method=DELETE"
+            method="POST"
+          >
+            <input type="submit" value="Remove" />
+          </form>
+       
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+    <a href="/flights/<%= flight._id%>/tickets/new">Add Ticket</a>
+  </table>
+
+  <table>
+    Tickets sold:
+    <thead>
+      <tr>
+        <th>Seat</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+  </tbody>
+  <% tickets?.forEach(function(t) { %>
+  <tr>
+    <td><%= t.seat %></td>
+    <td><%= t.price %></td>
+    <td>
+       <!-- I tried to add delete but it did not work -->
+      <form
+        action="/flights/<%= flight._id %>/tickets/<%= t._id %>?_method=DELETE" 
+        method="POST"
+      >
+        <input type="submit" value="Remove" />
+      </form>
+    </td>
+  </tr>
+  <% }); %>
+  </table>
+    
+    
+    
+<%- include('../partials/footer') %>
